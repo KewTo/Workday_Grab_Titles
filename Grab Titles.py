@@ -14,11 +14,11 @@ async def main(url):
 
         await page.goto(url)
 
-        time.sleep(3)
+        time.sleep(1)
 
         website = re.match('.*?.com', url).group(0)
 
-        for next_page in range(2):
+        for next_page in range(int(input('Input how many pages you want to search: '))):
             titles = await page.query_selector_all('.css-19uc56f')
             job_titles = [await title.inner_text() for title in titles]
 
@@ -30,16 +30,16 @@ async def main(url):
 
             n = 1
             n += int(next_page)
-            print(f"Page " + str(n))
+            print(f"Page #" + str(n))
 
             for separator in range(0, len(finish_combined)):
                 print(finish_combined[separator])
 
-            time.sleep(3)
+            time.sleep(1)
 
             await page.locator('[data-uxi-element-id="next"]').click()
 
-        await page.pause()
+        await browser.close()
 
 
 if __name__ == '__main__':
