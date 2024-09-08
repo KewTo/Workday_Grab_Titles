@@ -2,6 +2,7 @@ from playwright.async_api import async_playwright
 import asyncio
 import time
 import itertools
+import re
 
 
 async def main(url):
@@ -15,12 +16,14 @@ async def main(url):
 
         time.sleep(3)
 
+        website = re.match('.*?.com', url).group(0)
+
         for next_page in range(2):
             titles = await page.query_selector_all('.css-19uc56f')
             job_titles = [await title.inner_text() for title in titles]
 
             links = await page.query_selector_all('[data-automation-id="jobTitle"]')
-            links_titles = ['https://nvidia.wd5.myworkdayjobs.com' + await link.get_attribute('href') for link in links]
+            links_titles = [website + await link.get_attribute('href') for link in links]
 
             combined_titles = list(zip(job_titles, links_titles))
             finish_combined = list(itertools.chain(*combined_titles))
